@@ -62,7 +62,12 @@ class CatalogListItem extends StatelessWidget {
                 context.read<CartBloc>().add(CartEventAddItem(item: item, count: 1));
                 ScaffoldMessenger.of(context)
                   ..removeCurrentSnackBar()
-                  ..showSnackBar(SnackBar(content: Text('"${item.title}" telah dimasukkan ke keranjang')));
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text('"${item.title}" telah dimasukkan ke keranjang'),
+                      duration: const Duration(milliseconds: 400),
+                    ),
+                  );
               },
               icon: const Icon(Icons.add_shopping_cart),
               label: const Text("Tambah ke Keranjang"),
