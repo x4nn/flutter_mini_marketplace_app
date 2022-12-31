@@ -22,11 +22,30 @@ class CartView extends StatelessWidget {
 
         return Column(
           children: [
-            CheckboxListTile(
-              value: myCart.state.cartItemList.every((element) => element.selected),
-              onChanged: (value) => myCart.add(CartEventSelectAllItem(select: value!)),
-              title: const Text("Pilih Semua"),
-              contentPadding: const EdgeInsets.fromLTRB(16, 0, 8, 0),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 8, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: myCart.state.cartItemList.map((e) => e.selected).toList().contains(true)
+                        ? TextButton.icon(
+                            onPressed: () => myCart.add(CartEventRemoveSelectedItem()),
+                            icon: const Icon(Icons.delete),
+                            label: const Text("Hapus"),
+                          )
+                        : const SizedBox(),
+                  ),
+                  Expanded(
+                    child: CheckboxListTile(
+                      value: myCart.state.cartItemList.every((element) => element.selected),
+                      onChanged: (value) => myCart.add(CartEventSelectAllItem(select: value!)),
+                      title: const Text("Pilih Semua", textAlign: TextAlign.end),
+                      contentPadding: const EdgeInsets.all(0),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Flexible(
               child: ListView.builder(

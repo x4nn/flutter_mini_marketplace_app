@@ -15,23 +15,39 @@ class CartItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return Card(
-      child: SizedBox(
-        height: 100,
-        child: Row(
-          children: [
-            AspectRatio(
-              aspectRatio: 1,
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.horizontal(left: Radius.circular(4)),
-                ),
-                child: const Center(child: Text("Gambar item")),
+    return Dismissible(
+      key: Key('${cartItem.cartItem.id}'),
+      onDismissed: (direction) {
+        myCart.add(CartEventRemoveItem(item: cartItem));
+        ScaffoldMessenger.of(context)
+          ..removeCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text("${cartItem.cartItem.title} dihapus dari keranjang"),
+              behavior: SnackBarBehavior.floating,
+              action: SnackBarAction(
+                label: "Urungkan",
+                onPressed: () => myCart.add(CartEventUndoRemoveItem()),
               ),
             ),
-            Expanded(
-              child: Padding(
+          );
+      },
+      child: Card(
+        child: SizedBox(
+          height: 100,
+          child: Row(
+            children: [
+              AspectRatio(
+                aspectRatio: 1,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.horizontal(left: Radius.circular(4)),
+                  ),
+                  child: const Center(child: Text("Gambar item")),
+                ),
+              ),
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,23 +58,36 @@ class CartItemCard extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text("Jumlah : ${cartItem.count}", style: textTheme.bodyMedium),
-                  Checkbox(
-                    value: cartItem.selected,
-                    onChanged: (value) {
-                      myCart.add(CartEventSelectItem(item: cartItem, select: value!));
-                      // if (kDebugMode) print("Checkbox press $value");
-                    },
-                  ),
-                ],
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text("Jumlah : ${cartItem.count}", style: textTheme.bodyMedium),
+                          Text("Total : Rp${cartItem.cartItem.price * cartItem.count}", style: textTheme.bodyLarge),
+                        ],
+                      ),
+                    ),
+                    // const VerticalDivider(),
+                    // IconButton(
+                    //   onPressed: () => myCart.add(CartEventRemoveItem(item: cartItem)),
+                    //   icon: const Icon(Icons.delete),
+                    // ),
+                    const VerticalDivider(indent: 0, endIndent: 0),
+                    Checkbox(
+                      value: cartItem.selected,
+                      onChanged: (value) => myCart.add(CartEventSelectItem(item: cartItem, select: value!)),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

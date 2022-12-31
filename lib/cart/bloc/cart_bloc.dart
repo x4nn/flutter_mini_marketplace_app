@@ -9,16 +9,18 @@ part 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
   CartBloc({required this.cart}) : super(cart) {
-    on<CartEventAddItem>(_addItem);
-    on<CartEventRemoveItem>(_removeItem);
-    on<CartEventRemoveAllItem>(_removeAllItem);
-    on<CartEventSelectItem>(_select);
-    on<CartEventSelectAllItem>(_selectAll);
+    on<CartEventAddItem>(_onAddItem);
+    on<CartEventRemoveItem>(_onRemoveItem);
+    on<CartEventRemoveSelectedItem>(_onRemoveSelectedItem);
+    on<CartEventRemoveAllItem>(_onRemoveAllItem);
+    on<CartEventUndoRemoveItem>(_onUndoRemoveItem);
+    on<CartEventSelectItem>(_onSelect);
+    on<CartEventSelectAllItem>(_onSelectAll);
   }
 
   CartState cart;
 
-  void _addItem(CartEventAddItem event, Emitter<CartState> emit) async {
+  void _onAddItem(CartEventAddItem event, Emitter<CartState> emit) async {
     final itemList = state.cartItemList.map((e) => e.cartItem).toList();
     List<CartItem> cartItemList = List.from(state.cartItemList);
 
@@ -34,16 +36,24 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     // if (kDebugMode) print(state);
   }
 
-  void _removeItem(CartEventRemoveItem event, Emitter<CartState> emit) {
+  void _onRemoveItem(CartEventRemoveItem event, Emitter<CartState> emit) {
     List<CartItem> cartItemList = List.from(state.cartItemList)
       ..map((e) => e).toList()
       ..remove(event.item)
       ..toList();
 
+    emit(state.copyWith(cartItemList: cartItemList, lastDeletedItem: event.item));
+  }
+
+  void _onRemoveSelectedItem(CartEventRemoveSelectedItem event, Emitter<CartState> emit) {
+    List<CartItem> cartItemList = List.from(state.cartItemList)
+      ..removeWhere((element) => element.selected)
+      ..toList();
+
     emit(state.copyWith(cartItemList: cartItemList));
   }
 
-  void _removeAllItem(CartEventRemoveAllItem event, Emitter<CartState> emit) {
+  void _onRemoveAllItem(CartEventRemoveAllItem event, Emitter<CartState> emit) {
     List<CartItem> cartItemList = List.from(state.cartItemList)
       ..clear()
       ..toList();
@@ -51,7 +61,17 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     emit(state.copyWith(cartItemList: cartItemList));
   }
 
-  void _select(CartEventSelectItem event, Emitter<CartState> emit) {
+  void _onUndoRemoveItem(CartEventUndoRemoveItem event, Emitter<CartState> emit) {
+    final CartItem cartItem = state.lastDeletedItem!;
+
+    List<CartItem> cartItemList = List.from(state.cartItemList)
+      ..toList()
+      ..add(cartItem);
+
+    emit(state.copyWith(cartItemList: cartItemList, lastDeletedItem: null));
+  }
+
+  void _onSelect(CartEventSelectItem event, Emitter<CartState> emit) {
     List<CartItem> cartItemList = List.from(state.cartItemList).map((e) {
       if (e == event.item) return CartItem(cartItem: e.cartItem, count: e.count, selected: event.select);
 
@@ -63,7 +83,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     emit(state.copyWith(cartItemList: cartItemList));
   }
 
-  void _selectAll(CartEventSelectAllItem event, Emitter<CartState> emit) {
+  void _onSelectAll(CartEventSelectAllItem event, Emitter<CartState> emit) {
     List<CartItem> cartItemList = List.from(state.cartItemList)
         .map(
           (e) => CartItem(cartItem: e.cartItem, count: e.count, selected: event.select),

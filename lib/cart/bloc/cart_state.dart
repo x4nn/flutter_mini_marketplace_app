@@ -1,12 +1,19 @@
 part of 'cart_bloc.dart';
 
 class CartState extends Equatable {
-  const CartState({required this.cartItemList});
+  const CartState({required this.cartItemList, this.lastDeletedItem});
 
   final List<CartItem> cartItemList;
+  final CartItem? lastDeletedItem;
 
-  CartState copyWith({required List<CartItem> cartItemList}) {
-    return CartState(cartItemList: cartItemList);
+  CartState copyWith({
+    List<CartItem>? cartItemList,
+    CartItem? lastDeletedItem,
+  }) {
+    return CartState(
+      cartItemList: cartItemList ?? this.cartItemList,
+      lastDeletedItem: lastDeletedItem ?? this.lastDeletedItem,
+    );
   }
 
   @override
