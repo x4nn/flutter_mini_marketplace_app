@@ -16,12 +16,6 @@ class CatalogPage extends StatelessWidget {
         title: "Catalog",
         actions: [
           IconButton(
-              onPressed: () {
-                context.read<CartBloc>().add(CartEventRemoveAllItem());
-              },
-              tooltip: 'Reset keranjang',
-              icon: const Icon(Icons.refresh)),
-          IconButton(
             iconSize: 32,
             icon: Center(
               child: Stack(
