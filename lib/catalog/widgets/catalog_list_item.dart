@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mini_marketplace_app/cart/bloc/cart_bloc.dart';
 import 'package:mini_marketplace_app/catalog/model/models.dart';
 
@@ -60,14 +61,9 @@ class CatalogListItem extends StatelessWidget {
             OutlinedButton.icon(
               onPressed: () {
                 context.read<CartBloc>().add(CartEventAddItem(item: item, count: 1));
-                ScaffoldMessenger.of(context)
-                  ..removeCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(
-                      content: Text('"${item.title}" telah dimasukkan ke keranjang'),
-                      duration: const Duration(milliseconds: 400),
-                    ),
-                  );
+                Fluttertoast.cancel().whenComplete(() {
+                  Fluttertoast.showToast(msg: '"${item.title}" telah dimasukkan ke keranjang');
+                });
               },
               icon: const Icon(Icons.add_shopping_cart),
               label: const Text("Tambah ke Keranjang"),
