@@ -12,8 +12,8 @@ class CatalogPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(
-        title: "Catalog",
+      appBar: AppBar(
+        title: const Text("Catalog"),
         actions: [
           IconButton(
             iconSize: 32,
@@ -44,7 +44,7 @@ class CatalogPage extends StatelessWidget {
                 ],
               ),
             ),
-            tooltip: 'Buka Keranjang',
+            tooltip: 'Keranjang',
             onPressed: () {
               final route = MaterialPageRoute(
                 builder: (context) => const CartPage(),
