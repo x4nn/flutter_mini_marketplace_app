@@ -12,6 +12,7 @@ class Item extends Equatable {
 
   final int id;
   final String title;
+  final String image;
   final String description;
   final int price;
   final int stock;
