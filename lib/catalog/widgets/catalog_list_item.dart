@@ -27,6 +27,10 @@ class CatalogListItem extends StatelessWidget {
               aspectRatio: 1,
               child: Container(
                 decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(item.image),
+                    fit: BoxFit.cover,
+                  ),
                   borderRadius: BorderRadius.circular(15),
                   color: Colors.blue,
                 ),

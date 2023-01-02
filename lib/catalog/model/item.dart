@@ -4,6 +4,7 @@ class Item extends Equatable {
   const Item({
     required this.id,
     required this.title,
+    required this.image,
     required this.description,
     required this.price,
     required this.stock,
@@ -12,6 +13,7 @@ class Item extends Equatable {
 
   final int id;
   final String title;
+  final String image;
   final String description;
   final int price;
   final int stock;

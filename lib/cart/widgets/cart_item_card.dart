@@ -40,11 +40,14 @@ class CartItemCard extends StatelessWidget {
               AspectRatio(
                 aspectRatio: 1,
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(cartItem.item.image),
+                      fit: BoxFit.cover,
+                    ),
                     color: Colors.red,
-                    borderRadius: BorderRadius.horizontal(left: Radius.circular(4)),
+                    borderRadius: const BorderRadius.horizontal(left: Radius.circular(4)),
                   ),
-                  child: const Center(child: Text("Gambar item")),
                 ),
               ),
               Padding(
