@@ -21,8 +21,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   CartState cart;
 
   void _onAddItem(CartEventAddItem event, Emitter<CartState> emit) async {
-    final itemList = state.cartItemList.map((e) => e.cartItem).toList();
     List<CartItem> cartItemList = List.from(state.cartItemList);
+    final itemList = state.cartItemList.map((e) => e.item).toList();
 
     if (itemList.contains(event.item)) {
       // Item lebih dari 1 | same item is greater than 1

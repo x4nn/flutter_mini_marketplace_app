@@ -16,14 +16,14 @@ class CartItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Dismissible(
-      key: Key('${cartItem.cartItem.id}'),
+      key: Key('${cartItem.item.id}'),
       onDismissed: (direction) {
         myCart.add(CartEventRemoveItem(item: cartItem));
         ScaffoldMessenger.of(context)
           ..removeCurrentSnackBar()
           ..showSnackBar(
             SnackBar(
-              content: Text("${cartItem.cartItem.title} dihapus dari keranjang"),
+              content: Text("${cartItem.item.title} dihapus dari keranjang"),
               behavior: SnackBarBehavior.floating,
               action: SnackBarAction(
                 label: "Urungkan",
@@ -56,8 +56,8 @@ class CartItemCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(cartItem.cartItem.title, style: textTheme.titleMedium),
-                    Text('Rp${cartItem.cartItem.price}', style: textTheme.titleLarge),
+                    Text(cartItem.item.title, style: textTheme.titleMedium),
+                    Text('Rp${cartItem.item.price}', style: textTheme.titleLarge),
                   ],
                 ),
               ),
@@ -72,7 +72,7 @@ class CartItemCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text("Jumlah : ${cartItem.count}", style: textTheme.bodyMedium),
-                          Text("Total : Rp${cartItem.cartItem.price * cartItem.count}", style: textTheme.bodyLarge),
+                          Text("Total : Rp${cartItem.item.price * cartItem.count}", style: textTheme.bodyLarge),
                         ],
                       ),
                     ),
@@ -84,7 +84,7 @@ class CartItemCard extends StatelessWidget {
                     const VerticalDivider(indent: 0, endIndent: 0),
                     Checkbox(
                       value: cartItem.selected,
-                      onChanged: (value) => myCart.add(CartEventSelectItem(item: cartItem, select: value!)),
+                      onChanged: (value) => myCart.add(CartEventSelectItem(cartItem: cartItem, select: value!)),
                     ),
                   ],
                 ),

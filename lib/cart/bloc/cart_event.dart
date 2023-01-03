@@ -46,13 +46,13 @@ class CartEventUndoRemoveItem extends CartEvent {
 }
 
 class CartEventSelectItem extends CartEvent {
-  CartEventSelectItem({required this.item, required this.select});
+  CartEventSelectItem({required this.cartItem, required this.select});
 
-  final CartItem item;
+  final CartItem cartItem;
   final bool select;
 
   @override
-  List<Object?> get props => [item, select];
+  List<Object?> get props => [cartItem, select];
 }
 
 class CartEventSelectAllItem extends CartEvent {

@@ -5,27 +5,27 @@ enum CatalogStatus { initial, success, failure }
 class CatalogState extends Equatable {
   const CatalogState({
     this.status = CatalogStatus.initial,
-    this.item = const <Item>[],
+    this.items = const <Item>[],
   });
 
   final CatalogStatus status;
-  final List<Item> item;
+  final List<Item> items;
 
   CatalogState copyWith({
     CatalogStatus? status,
-    List<Item>? item,
+    List<Item>? items,
   }) {
     return CatalogState(
       status: status ?? this.status,
-      item: item ?? this.item,
+      items: items ?? this.items,
     );
   }
 
   @override
   String toString() {
-    return '''PostState { status: $status, posts: ${item.length} }''';
+    return '''CatalogState { status: $status, posts: ${items.length} }''';
   }
 
   @override
-  List<Object> get props => [status, item];
+  List<Object> get props => [status, items];
 }

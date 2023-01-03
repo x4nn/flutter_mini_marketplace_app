@@ -20,9 +20,9 @@ class CatalogView extends StatelessWidget {
               mainAxisSpacing: 8,
               childAspectRatio: 0.60,
             ),
-            itemCount: myCatalogBloc.state.item.length,
+            itemCount: myCatalogBloc.state.items.length,
             itemBuilder: (context, index) {
-              return CatalogListItem(item: myCatalogBloc.state.item[index]);
+              return CatalogListItem(item: myCatalogBloc.state.items[index]);
             },
           );
         },

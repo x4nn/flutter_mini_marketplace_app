@@ -17,17 +17,17 @@ class CatalogBloc extends Bloc<CatalogEvent, CatalogState> {
         final item = await _fetchProduct();
         return emit(state.copyWith(
           status: CatalogStatus.success,
-          item: item,
+          items: item,
         ));
       }
 
-      final item = await _fetchProduct(state.item.length);
+      final item = await _fetchProduct(state.items.length);
 
       emit(item.isEmpty
           ? state.copyWith()
           : state.copyWith(
               status: CatalogStatus.success,
-              item: List.of(state.item)..addAll(item),
+              items: List.of(state.items)..addAll(item),
             ));
     } catch (_) {
       emit(state.copyWith(status: CatalogStatus.failure));
