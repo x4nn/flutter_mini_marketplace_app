@@ -1,10 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mini_marketplace_app/cart/bloc/cart_bloc.dart';
-import 'package:mini_marketplace_app/cart/view/view.dart';
+import 'package:mini_marketplace_app/cart/cart.dart';
 import 'package:mini_marketplace_app/catalog/view/view.dart';
-import 'package:mini_marketplace_app/shared/widgets/shared_widgets.dart';
 
 class CatalogPage extends StatelessWidget {
   const CatalogPage({super.key});

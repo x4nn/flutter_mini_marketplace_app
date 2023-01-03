@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mini_marketplace_app/cart/model/cart_item.dart';
 import 'package:mini_marketplace_app/catalog/model/models.dart';
+import 'package:mini_marketplace_app/cart/cart.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';

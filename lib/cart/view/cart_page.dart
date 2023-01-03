@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mini_marketplace_app/cart/bloc/cart_bloc.dart';
-import 'package:mini_marketplace_app/cart/model/cart_item.dart';
-import 'package:mini_marketplace_app/cart/view/view.dart';
-import 'package:mini_marketplace_app/cart/widgets/widgets.dart';
+import 'package:mini_marketplace_app/cart/cart.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
