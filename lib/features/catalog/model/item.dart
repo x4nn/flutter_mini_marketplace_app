@@ -21,4 +21,28 @@ class Item extends Equatable {
 
   @override
   List<Object?> get props => [id, title, description, price, stock];
+
+  static Item fromJson(Map<String, dynamic> json) {
+    return Item(
+      id: json['id'],
+      title: json['title'],
+      image: json['image'],
+      description: json['description'],
+      price: json['price'],
+      stock: json['stock'],
+      rating: json['rating'],
+    );
+  }
+
+  static Map<String, dynamic> toJson(Item item) {
+    return {
+      "id": item.id,
+      "title": item.title,
+      "image": item.image,
+      "description": item.description,
+      "price": item.price,
+      "stock": item.stock,
+      "rating": item.rating,
+    };
+  }
 }

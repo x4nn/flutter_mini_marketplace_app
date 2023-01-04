@@ -39,6 +39,25 @@ class CartState extends Equatable {
     return totalSelectedItemPrice;
   }
 
+  static CartState? fromJson(Map<String, dynamic> json) {
+    return CartState(
+      cartItemList: (decoder.convert(json['cart_item_list']) as List).map((e) => CartItem.fromJson(e)).toList(),
+      totalSelectedItem: json['total_selected_item'],
+      totalSelectedItemPrice: json['total_selected_item_price'],
+      lastDeletedItem: CartItem.fromJson(json['last_deleted_item']),
+    );
+  }
+
+  static Map<String, dynamic>? toJson(CartState state) {
+    const sus = Item(id: 00, title: '', description: '', price: 0, stock: 0, rating: 0, image: '');
+    return {
+      "cart_item_list": encoder.convert(state.cartItemList.map((e) => CartItem.toJson(e)).toList()),
+      "total_selected_item": state.totalSelectedItem,
+      "total_selected_item_price": state.totalSelectedItemPrice,
+      "last_deleted_item": encoder.convert(CartItem.toJson(state.lastDeletedItem ?? const CartItem(item: sus))),
+    };
+  }
+
   @override
   String toString() {
     return '''Cart { cart item list count: ${cartItemList.length}\ntotal selected item: $totalSelectedItem\ntotal selected item price: $totalSelectedItemPrice}''';

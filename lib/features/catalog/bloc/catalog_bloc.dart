@@ -1,12 +1,13 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:mini_marketplace_app/features/catalog/model/models.dart';
 import 'package:mini_marketplace_app/dummy_data/item_dummy.dart';
+import 'package:mini_marketplace_app/config/helper/helper.dart';
 
 part 'catalog_state.dart';
 part 'catalog_event.dart';
 
-class CatalogBloc extends Bloc<CatalogEvent, CatalogState> {
+class CatalogBloc extends HydratedBloc<CatalogEvent, CatalogState> {
   CatalogBloc() : super(const CatalogState()) {
     on<CatalogFetched>(_onCatalogFetched);
   }
@@ -50,5 +51,23 @@ class CatalogBloc extends Bloc<CatalogEvent, CatalogState> {
     } catch (e) {
       throw Exception("Error fetching catalog");
     }
+  }
+
+  @override
+  CatalogState? fromJson(Map<String, dynamic> json) {
+    return CatalogState(
+      items: (decoder.convert(json['items']) as List)
+          .map(
+            (e) => Item.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
+    );
+  }
+
+  @override
+  Map<String, dynamic>? toJson(CatalogState state) {
+    return {
+      "item": encoder.convert(state.items.map((e) => Item.toJson(e)).toList()),
+    };
   }
 }

@@ -1,13 +1,14 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter/foundation.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:mini_marketplace_app/features/cart/model/models.dart';
 import 'package:mini_marketplace_app/features/catalog/catalog.dart';
+import 'package:mini_marketplace_app/config/helper/helper.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
 
-class CartBloc extends Bloc<CartEvent, CartState> {
+class CartBloc extends HydratedBloc<CartEvent, CartState> {
   CartBloc({required this.cart}) : super(cart) {
     on<CartEventAddItem>(_onAddItem);
     on<CartEventRemoveItem>(_onRemoveItem);
@@ -117,5 +118,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     // if (kDebugMode) print("$cartItemList ${event.select}");
 
     emit(state.copyWith(cartItemList: cartItemList));
+  }
+
+  @override
+  CartState? fromJson(Map<String, dynamic> json) {
+    return CartState.fromJson(json);
+  }
+
+  @override
+  Map<String, dynamic>? toJson(CartState state) {
+    return CartState.toJson(state);
   }
 }
