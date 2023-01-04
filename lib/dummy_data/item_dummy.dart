@@ -1,4 +1,4 @@
-import 'package:mini_marketplace_app/catalog/model/models.dart';
+import 'package:mini_marketplace_app/features/catalog/model/models.dart';
 
 List<Item> myItem = [
   const Item(id: 0, title: "Batagor", image: 'assets/images/default.jpg', description: "Ini adalah deskripsi", price: 15000, stock: 100, rating: 4.7),
