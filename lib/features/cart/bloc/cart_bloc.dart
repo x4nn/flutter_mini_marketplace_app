@@ -1,15 +1,15 @@
 import 'package:equatable/equatable.dart';
-// import 'package:flutter/foundation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:mini_marketplace_app/config/helper/helper.dart';
+import 'package:mini_marketplace_app/features/cart/model/cart.dart';
 import 'package:mini_marketplace_app/features/cart/model/models.dart';
 import 'package:mini_marketplace_app/features/catalog/catalog.dart';
-import 'package:mini_marketplace_app/config/helper/helper.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
 
 class CartBloc extends HydratedBloc<CartEvent, CartState> {
-  CartBloc({required this.cart}) : super(cart) {
+  CartBloc() : super(const CartState()) {
     on<CartEventAddItem>(_onAddItem);
     on<CartEventRemoveItem>(_onRemoveItem);
     on<CartEventRemoveSelectedItem>(_onRemoveSelectedItem);
@@ -19,114 +19,108 @@ class CartBloc extends HydratedBloc<CartEvent, CartState> {
     on<CartEventSelectAllItem>(_onSelectAll);
   }
 
-  CartState cart;
-
-  void _onAddItem(CartEventAddItem event, Emitter<CartState> emit) async {
-    final itemList = state.cartItemList.map((e) => e.item).toList();
+  Future<void> _onAddItem(CartEventAddItem event, Emitter<CartState> emit) async {
+    final itemList = state.cart.cartItemList.map((e) => e.item).toList();
     List<CartItem> cartItemList;
 
     if (itemList.contains(event.item)) {
-      // Item lebih dari 1 | same item is greater than 1
-      // increment the cart item count
-      cartItemList = List.from(state.cartItemList).map((e) {
-        e as CartItem;
-        if (e.item.id == event.item.id) {
-          return e.copyWith(
-            item: event.item,
-            count: e.count + event.count,
-            selected: e.selected,
-          );
-        }
-        return e.copyWith(
-          item: e.item,
-          count: e.count,
-          selected: e.selected,
-        );
-      }).toList();
-    } else {
-      cartItemList = List.from(state.cartItemList)..add(CartItem(item: event.item, count: 1));
-    }
+      int cartItemIndex = state.cart.cartItemList.indexWhere((c) => c.item.id == event.item.id);
 
-    emit(state.copyWith(cartItemList: cartItemList));
-    // if (kDebugMode) print(state);
+      cartItemList = [...state.cart.cartItemList];
+      cartItemList.replaceRange(
+        cartItemIndex,
+        cartItemIndex + 1,
+        [CartItem(item: event.item, count: cartItemList[cartItemIndex].count + event.count)],
+      );
+
+      emit(state.copyWith(cartItemList: [...cartItemList]));
+    } else {
+      cartItemList = List.from(state.cart.cartItemList);
+      emit(state.copyWith(cartItemList: [...cartItemList, CartItem(item: event.item)]));
+    }
   }
 
-  void _onRemoveItem(CartEventRemoveItem event, Emitter<CartState> emit) {
-    List<CartItem> cartItemList = List.from(state.cartItemList)
+  Future<void> _onRemoveItem(CartEventRemoveItem event, Emitter<CartState> emit) async {
+    List<CartItem> cartItemList = List.from(state.cart.cartItemList)
       ..map((e) => e).toList()
-      ..remove(event.item)
+      ..remove(event.cartItem)
       ..toList();
 
-    emit(state.copyWith(
-      cartItemList: cartItemList,
-      lastDeletedItem: event.item,
-    ));
+    emit(state.copyWith(cartItemList: cartItemList, lastDeletedItem: event.cartItem));
   }
 
-  void _onRemoveSelectedItem(CartEventRemoveSelectedItem event, Emitter<CartState> emit) {
-    List<CartItem> cartItemList = List.from(state.cartItemList)
+  Future<void> _onRemoveSelectedItem(CartEventRemoveSelectedItem event, Emitter<CartState> emit) async {
+    List<CartItem> newCartItemList = List.from(state.cart.cartItemList)
+      ..toList()
       ..removeWhere((element) => element.selected)
       ..toList();
 
-    emit(state.copyWith(cartItemList: cartItemList));
+    emit(state.copyWith(cartItemList: newCartItemList));
   }
 
-  void _onRemoveAllItem(CartEventRemoveAllItem event, Emitter<CartState> emit) {
-    List<CartItem> cartItemList = List.from(state.cartItemList)
+  Future<void> _onRemoveAllItem(CartEventRemoveAllItem event, Emitter<CartState> emit) async {
+    List<CartItem> cartItemList = List.from(state.cart.cartItemList)
       ..clear()
       ..toList();
 
     emit(state.copyWith(cartItemList: cartItemList));
   }
 
-  void _onUndoRemoveItem(CartEventUndoRemoveItem event, Emitter<CartState> emit) {
-    final CartItem cartItem = state.lastDeletedItem!;
+  Future<void> _onUndoRemoveItem(CartEventUndoRemoveItem event, Emitter<CartState> emit) async {
+    if (state.lastDeletedItem != null) {
+      final CartItem cartItem = state.lastDeletedItem!;
 
-    List<CartItem> cartItemList = List.from(state.cartItemList)
-      ..toList()
-      ..add(cartItem);
+      List<CartItem> cartItemList = List.from(state.cart.cartItemList)
+        ..toList()
+        ..add(cartItem);
 
-    emit(state.copyWith(cartItemList: cartItemList, lastDeletedItem: null));
+      emit(state.copyWith(cartItemList: cartItemList, lastDeletedItem: null));
+    }
   }
 
   void _onSelect(CartEventSelectItem event, Emitter<CartState> emit) {
-    List<CartItem> cartItemList = List.from(state.cartItemList).map((e) {
-      e as CartItem;
-      if (e.item.id == event.cartItem.item.id) {
-        return e.copyWith(
-          item: e.item,
-          count: e.count,
-          selected: event.select,
-        );
-      }
-      return e.copyWith(
-        item: e.item,
-        count: e.count,
-        selected: e.selected,
-      );
-    }).toList();
+    List<CartItem> cartItemList = [...state.cart.cartItemList];
 
-    emit(state.copyWith(cartItemList: cartItemList));
+    int cartItemIndex = state.cart.cartItemList.indexWhere((c) => c.item.id == event.cartItemId);
+    CartItem cartItem = cartItemList[cartItemIndex];
+
+    cartItemList.replaceRange(
+      cartItemIndex,
+      cartItemIndex + 1,
+      [CartItem(item: cartItem.item, count: cartItem.count, selected: event.select)],
+    );
+
+    emit(state.copyWith(cartItemList: [...cartItemList]));
   }
 
   void _onSelectAll(CartEventSelectAllItem event, Emitter<CartState> emit) {
-    List<CartItem> cartItemList = List.from(state.cartItemList).map((e) {
+    List<CartItem> cartItemList = List.from(state.cart.cartItemList).map((e) {
       e as CartItem;
       return e.copyWith(item: e.item, count: e.count, selected: event.select);
     }).toList();
 
-    // if (kDebugMode) print("$cartItemList ${event.select}");
-
-    emit(state.copyWith(cartItemList: cartItemList));
+    emit(state.copyWith(cartItemList: [...cartItemList]));
   }
 
   @override
   CartState? fromJson(Map<String, dynamic> json) {
-    return CartState.fromJson(json);
+    print("fromJson: $json");
+
+    try {
+      return CartState.fromJson(json);
+    } catch (e) {
+      throw Exception("$e | fromJson failed");
+    }
   }
 
   @override
   Map<String, dynamic>? toJson(CartState state) {
-    return CartState.toJson(state);
+    print("toJson: $state");
+
+    try {
+      return CartState.toJson(state);
+    } catch (e) {
+      throw Exception("$e | toJson failed");
+    }
   }
 }

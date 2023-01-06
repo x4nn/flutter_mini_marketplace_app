@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mini_marketplace_app/features/cart/bloc/cart_bloc.dart';
+import 'package:mini_marketplace_app/features/cart/model/models.dart';
 import 'package:mini_marketplace_app/features/cart/widgets/widgets.dart';
 
 class CartView extends StatelessWidget {
@@ -12,10 +13,11 @@ class CartView extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
-        CartBloc myCart = context.read<CartBloc>();
-        // if (kDebugMode) print("Count : ${state.cartItemList.length}");
+        CartBloc cartBloc = context.read<CartBloc>();
+        Cart cart = state.cart;
+        if (kDebugMode) print("Cart item count : ${cart.cartItemList.length}");
 
-        if (myCart.state.cartItemList.isEmpty) {
+        if (cart.cartItemList.isEmpty) {
           if (kDebugMode) print("Cart Empty!");
           return Center(child: Text("Sepertinya keranjangmu masih kosong! :(", style: textTheme.titleMedium));
         }
@@ -28,9 +30,9 @@ class CartView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
-                    child: myCart.state.cartItemList.map((e) => e.selected).toList().contains(true)
+                    child: cart.cartItemList.map((e) => e.selected).toList().contains(true)
                         ? TextButton.icon(
-                            onPressed: () => myCart.add(CartEventRemoveSelectedItem()),
+                            onPressed: () => cartBloc.add(const CartEventRemoveSelectedItem()),
                             icon: const Icon(Icons.delete),
                             label: const Text("Hapus"),
                           )
@@ -38,8 +40,8 @@ class CartView extends StatelessWidget {
                   ),
                   Expanded(
                     child: CheckboxListTile(
-                      value: myCart.state.cartItemList.every((element) => element.selected),
-                      onChanged: (value) => myCart.add(CartEventSelectAllItem(select: value!)),
+                      value: cart.cartItemList.every((element) => element.selected),
+                      onChanged: (value) => cartBloc.add(CartEventSelectAllItem(select: value!)),
                       title: const Text("Pilih Semua", textAlign: TextAlign.end),
                       contentPadding: const EdgeInsets.all(0),
                     ),
@@ -49,10 +51,10 @@ class CartView extends StatelessWidget {
             ),
             Flexible(
               child: ListView.builder(
-                itemCount: myCart.state.cartItemList.length,
+                itemCount: cart.cartItemList.length,
                 itemBuilder: (context, index) {
-                  var cartItem = myCart.state.cartItemList[index];
-                  return CartItemCard(cartItem: cartItem, myCart: myCart);
+                  var cartItem = cart.cartItemList[index];
+                  return CartItemCard(cartItem: cartItem, myCart: cartBloc);
                 },
               ),
             ),

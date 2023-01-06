@@ -56,9 +56,9 @@ class CatalogBloc extends HydratedBloc<CatalogEvent, CatalogState> {
   @override
   CatalogState? fromJson(Map<String, dynamic> json) {
     return CatalogState(
-      items: (decoder.convert(json['items']) as List)
+      items: (json['items'] as List<Map<String, dynamic>>)
           .map(
-            (e) => Item.fromJson(e as Map<String, dynamic>),
+            (e) => Item.fromJson(e),
           )
           .toList(),
     );
@@ -67,7 +67,7 @@ class CatalogBloc extends HydratedBloc<CatalogEvent, CatalogState> {
   @override
   Map<String, dynamic>? toJson(CatalogState state) {
     return {
-      "item": encoder.convert(state.items.map((e) => Item.toJson(e)).toList()),
+      "items": encoder.convert(state.items.map((e) => e.toJson()).toList()),
     };
   }
 }

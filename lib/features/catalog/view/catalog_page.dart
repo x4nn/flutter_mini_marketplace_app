@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mini_marketplace_app/features/cart/cart.dart';
@@ -21,10 +20,12 @@ class CatalogPage extends StatelessWidget {
                 children: [
                   const Center(child: Icon(Icons.shopping_cart)),
                   BlocBuilder<CartBloc, CartState>(
+                    buildWhen: (previous, current) {
+                      return current != previous ? true : false;
+                    },
                     builder: (context, state) {
-                      if (kDebugMode) print("Count : ${state.cartItemList.length}");
-
-                      if (state.cartItemList.isEmpty) {
+                      Cart cart = state.cart;
+                      if (cart.cartItemList.isEmpty) {
                         return const SizedBox();
                       }
                       return Container(
@@ -32,7 +33,7 @@ class CatalogPage extends StatelessWidget {
                         decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.red),
                         child: Center(
                           child: Text(
-                            "${state.cartItemList.length}",
+                            "${cart.cartItemList.length}",
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),

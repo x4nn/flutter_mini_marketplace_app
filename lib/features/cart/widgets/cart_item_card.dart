@@ -18,7 +18,7 @@ class CartItemCard extends StatelessWidget {
     return Dismissible(
       key: Key('${cartItem.item.id}'),
       onDismissed: (direction) {
-        myCart.add(CartEventRemoveItem(item: cartItem));
+        myCart.add(CartEventRemoveItem(cartItem: cartItem));
         ScaffoldMessenger.of(context)
           ..removeCurrentSnackBar()
           ..showSnackBar(
@@ -27,7 +27,7 @@ class CartItemCard extends StatelessWidget {
               behavior: SnackBarBehavior.floating,
               action: SnackBarAction(
                 label: "Urungkan",
-                onPressed: () => myCart.add(CartEventUndoRemoveItem()),
+                onPressed: () => myCart.add(const CartEventUndoRemoveItem()),
               ),
             ),
           );
@@ -84,7 +84,7 @@ class CartItemCard extends StatelessWidget {
                     const VerticalDivider(indent: 0, endIndent: 0),
                     Checkbox(
                       value: cartItem.selected,
-                      onChanged: (value) => myCart.add(CartEventSelectItem(cartItem: cartItem, select: value!)),
+                      onChanged: (value) => myCart.add(CartEventSelectItem(select: value!, cartItemId: cartItem.item.id)),
                     ),
                   ],
                 ),

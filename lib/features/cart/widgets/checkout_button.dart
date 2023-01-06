@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mini_marketplace_app/features/cart/bloc/cart_bloc.dart';
+import 'package:mini_marketplace_app/features/cart/model/models.dart';
 
 class CheckoutButton extends StatelessWidget {
   const CheckoutButton({Key? key, required this.state}) : super(key: key);
@@ -8,6 +9,7 @@ class CheckoutButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Cart cart = state.cart;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -23,13 +25,13 @@ class CheckoutButton extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    state.totalSelectedItem < 1 ? "Checkout" : "Checkout (${state.totalSelectedItem})",
+                    cart.totalSelectedItem < 1 ? "Checkout" : "Checkout (${cart.totalSelectedItem})",
                     style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  state.totalSelectedItem < 1
+                  cart.totalSelectedItem < 1
                       ? const SizedBox()
                       : Text(
-                          "Total Rp${state.totalSelectedItemPrice}",
+                          "Total Rp${cart.totalSelectedItemPrice}",
                           style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w300),
                         ),
                 ],

@@ -1,12 +1,14 @@
 part of 'cart_bloc.dart';
 
 abstract class CartEvent extends Equatable {
+  const CartEvent();
+
   @override
   List<Object?> get props => [];
 }
 
 class CartEventAddItem extends CartEvent {
-  CartEventAddItem({required this.item, this.count = 1});
+  const CartEventAddItem({required this.item, this.count = 1});
 
   final Item item;
   final int count;
@@ -16,47 +18,47 @@ class CartEventAddItem extends CartEvent {
 }
 
 class CartEventRemoveItem extends CartEvent {
-  CartEventRemoveItem({required this.item});
+  const CartEventRemoveItem({required this.cartItem});
 
-  final CartItem item;
+  final CartItem cartItem;
 
   @override
-  List<Object?> get props => [item];
+  List<Object?> get props => [cartItem];
 }
 
 class CartEventRemoveSelectedItem extends CartEvent {
-  CartEventRemoveSelectedItem();
+  const CartEventRemoveSelectedItem();
 
   @override
   List<Object?> get props => [];
 }
 
 class CartEventRemoveAllItem extends CartEvent {
-  CartEventRemoveAllItem();
+  const CartEventRemoveAllItem();
 
   @override
   List<Object?> get props => [];
 }
 
 class CartEventUndoRemoveItem extends CartEvent {
-  CartEventUndoRemoveItem();
+  const CartEventUndoRemoveItem();
 
   @override
   List<Object?> get props => [];
 }
 
 class CartEventSelectItem extends CartEvent {
-  CartEventSelectItem({required this.cartItem, required this.select});
+  const CartEventSelectItem({required this.cartItemId, required this.select});
 
-  final CartItem cartItem;
+  final int cartItemId;
   final bool select;
 
   @override
-  List<Object?> get props => [cartItem, select];
+  List<Object?> get props => [cartItemId, select];
 }
 
 class CartEventSelectAllItem extends CartEvent {
-  CartEventSelectAllItem({required this.select});
+  const CartEventSelectAllItem({required this.select});
 
   final bool select;
 

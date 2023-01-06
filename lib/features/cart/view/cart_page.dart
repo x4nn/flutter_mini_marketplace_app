@@ -14,7 +14,7 @@ class CartPage extends StatelessWidget {
       body: const CartView(),
       bottomNavigationBar: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
-          return state.cartItemList.isEmpty ? const SizedBox(height: 100) : CheckoutButton(state: state);
+          return state.cart.cartItemList.isEmpty ? const SizedBox(height: 100) : CheckoutButton(state: state);
         },
       ),
     );

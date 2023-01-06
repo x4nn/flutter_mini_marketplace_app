@@ -1,5 +1,9 @@
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'item.g.dart';
+
+@JsonSerializable()
 class Item extends Equatable {
   const Item({
     required this.id,
@@ -22,27 +26,11 @@ class Item extends Equatable {
   @override
   List<Object?> get props => [id, title, description, price, stock];
 
-  static Item fromJson(Map<String, dynamic> json) {
-    return Item(
-      id: json['id'],
-      title: json['title'],
-      image: json['image'],
-      description: json['description'],
-      price: json['price'],
-      stock: json['stock'],
-      rating: json['rating'],
-    );
+  factory Item.fromJson(Map<String, dynamic> json) {
+    return _$ItemFromJson(json);
   }
 
-  static Map<String, dynamic> toJson(Item item) {
-    return {
-      "id": item.id,
-      "title": item.title,
-      "image": item.image,
-      "description": item.description,
-      "price": item.price,
-      "stock": item.stock,
-      "rating": item.rating,
-    };
+  Map<String, dynamic> toJson() {
+    return _$ItemToJson(this);
   }
 }
